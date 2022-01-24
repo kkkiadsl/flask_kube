@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movieweb
+  namespace: flask
+  labels:
+    app: movieweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movieweb
+  template:
+    metadata:
+      labels:
+        app: movieweb
+    spec:
+      containers:
+      - name: movieweb
+        image: kkkiadsl/movie:latest
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: movieweb-svc
+  namespace: flask
+spec:
+  type: NodePort
+  ports:
+  - name: tcp
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+    nodePort: 30090
+  selector: 
+    app: movieweb

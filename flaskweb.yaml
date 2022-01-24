@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaskweb
+  namespace: flask
+  labels:
+    app: flaskweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flaskweb
+  template:
+    metadata:
+      labels:
+        app: flaskweb
+    spec:
+      containers:
+      - name: flaskweb
+        image: kkkiadsl/flaskweb:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaskweb-svc
+  namespace: flask
+spec:
+  type: NodePort
+  ports:
+  - name: tcp
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30080
+  selector: 
+    app: flaskweb
